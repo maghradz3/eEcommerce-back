@@ -11,6 +11,7 @@ import {
 } from "../controllers/products.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import { roleMiddleware } from "../middlewares/role.middleware.js";
+import { scheduleJob } from "node-schedule";
 
 const router = express.Router();
 
@@ -29,5 +30,9 @@ router.post("/:productId/users/:userId/rate", authMiddleware, rateProduct);
 router.put("/:id", authMiddleware, roleMiddleware, updateProduct);
 
 router.delete("/:id", authMiddleware, roleMiddleware, deleteProduct);
+
+scheduleJob("*/15 * * * *", () => {
+  router.get("/", getMainProducts);
+});
 
 export default router;
